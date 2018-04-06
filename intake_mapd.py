@@ -1,9 +1,9 @@
-__version__ = '0.1'
+""" Implements intake-mapd Plugin.
+"""
+# Author: Pearu Peterson
+# Created: Apr 2018
 
-try:
-    import urllib.parse as urlparse
-except ImportError:
-    import urlparse  # Python 2.x
+__version__ = '0.1'
 
 import pandas
 from intake.source import base
@@ -55,8 +55,7 @@ class MapDDBSource(base.DataSource):
             metadate: dict
                 The metadata to keep
         """
-        super(MapDDBSource, self).__init__(container='dataframe',
-                                           metadata=metadata)
+        super(MapDDBSource, self).__init__(container='dataframe', metadata=metadata)
 
         self._init_args = {
             'uri': uri,
@@ -64,52 +63,25 @@ class MapDDBSource(base.DataSource):
             'projection': projection,
         }
 
-        scheme_name = 'mapd'
-        try:
-            split_url = urlparse.urlsplit(uri, scheme=scheme_name)
-            # perform some checking...
-            path = urlparse.unquote(split_url.path).split('/')
-
-            if (split_url.scheme != scheme_name or
-                    split_url.hostname is None or
-                    split_url.port is None or
-                    len(path) != 2 or path[0] != '' or
-                    split_url.query != '' or
-                    split_url.fragment != ''):
-                raise Exception()
-        except Exception as e:
-            new_e = Exception('Unsupported URI for a {name} source: {uri}. Use {scheme}://host:port/database'\
-                              .format(name=type (self).__name__,
-                                      scheme=scheme_name,
-                                      uri = uri
-                              ))
-            new_e.original = e
-            raise new_e
-
-        self._uri = uri
-        self._host = split_url.hostname
-        self._port = int(split_url.port)
-        self._database = path[1]  # the path portion pointing to the database
+        self._uri = uri        
         self._collection = collection
         self._projection = projection
         self._dtypes = None
         self._adapter = None
 
     def _make_adapter(self):
-        # TODO: use pymapd to initialize _adapter
-        #self._adapter = ...
-        raise NotImplementedError ('{}._make_adapter'.format(type(self).__name__))
+        select_cmd = 'SELECT {} FROM {}'.format(', '.join(self._projection or ['*']), self._collection)
+        self._adapter = pymapd.connect(self._uri).execute(select_cmd) # Cursor
         
     def _get_schema(self):
         if self._adapter is None:
             self._make_adapter()
 
         if self._dtypes is None:
-            # TODO: use pymapd to get dtypes
-            self._dtypes = pandas.DataFrame(
-                self._adapter[self._projection][0:10]).dtypes
+            # TODO: use pymapd tools to fill dtypes
+            self._dtypes = pandas.DataFrame.from_records(self._adapter.fetchmany(1)).dtypes
             
-        return intake.source.base.Schema(
+        return base.Schema(
             datashape='datashape',
             dtype=self._dtypes,
             shape=(None, len(self._dtypes)),
@@ -118,9 +90,10 @@ class MapDDBSource(base.DataSource):
         )
 
     def _get_partition(self, _):
-        return pandas.DataFrame(self._adapter[self._projection][:])
-    
+        return pandas.DataFrame.from_records(self._adapter.fetchall(), columns=self._projection)
 
     def _close(self):
         # close any files, sockets, etc
-        self._adapter = None
+        if self._adapter is not None:
+            self._adapter.close()
+            self._adapter = None
