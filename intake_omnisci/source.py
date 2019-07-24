@@ -1,44 +1,21 @@
-""" Implements intake-omnisci Plugin.
+""" Implements intake-omnisci driver.
 """
-
+from intake.source.base import DataSource, Schema
 import pandas
-from intake.source import base
 import pymapd
 
-class Plugin(base.Plugin):
+from . import __version__
 
-    def __init__(self):
-        super(Plugin, self).__init__(name='omnisci',
-                                     version=__version__,
-                                     container='dataframe',
-                                     partition_access=False,
-        )
+class OmniSciSource(DataSource):
+    """
+    An intake data source representing data from an OmniSci database table.
+    """
+    version = __version__
+    name = 'omnisci'
+    container = 'dataframe'
+    partition_access = False
 
-    def open(self, uri, collection, projection, **kwargs):
-        """
-        Create MapDDBSource instance
-
-        Parameters:
-            uri : str
-                Full MapD URI for the database connection.
-            collection : a omnisci valid query
-                omnisci query to be executed.
-            projection : a omnisci valid projection
-                omnisci projection
-            kwargs (dict):
-                Additional parameters to pass as keyword arguments to
-                ``??` constructor.
-        """
-        base_kwargs, source_kwargs = self.separate_base_kwargs(kwargs)
-        return MapDDBSource(uri=uri,
-                            collection=collection,
-                            projection=projection,
-                            metadata=base_kwargs['metadata'])
-
-
-class OmniSciSource(base.DataSource):
-    
-    def __init__(self, uri, collection, projection, metadata=None):
+    def __init__(self, uri, collection, projection=None, metadata=None):
         """Load data from OmniSci
 
         Parameters:
@@ -49,48 +26,49 @@ class OmniSciSource(base.DataSource):
                 Can either be a table name or a SQL query.
             projection: tuple/list
                 The fields to query.
-            metadate: dict
+            metadata: dict
                 The metadata to keep
         """
-        super(MapDDBSource, self).__init__(container='dataframe', metadata=metadata)
-
-        self._init_args = {
-            'uri': uri,
-            'collection': collection,
-            'projection': projection,
-        }
 
         self._uri = uri        
         self._collection = collection
         self._projection = projection
         self._dtypes = None
-        self._adapter = None
+        self._connection = None
 
-    def _make_adapter(self):
-        select_cmd = 'SELECT {} FROM {}'.format(', '.join(self._projection or ['*']), self._collection)
-        self._adapter = pymapd.connect(self._uri).execute(select_cmd) # Cursor
+        super().__init__(metadata=metadata)
+
+    def _make_connection(self):
+        select_cmd = 'SELECT {} FROM {} LIMIT 10'.format(', '.join(self._projection or ['*']), self._collection)
+        self._connection = pymapd.connect(self._uri).execute(select_cmd) # Cursor
         
     def _get_schema(self):
-        if self._adapter is None:
-            self._make_adapter()
+        if self._connection is None:
+            self._make_connection()
 
         if self._dtypes is None:
             # TODO: use pymapd tools to fill dtypes
-            self._dtypes = pandas.DataFrame.from_records(self._adapter.fetchmany(1)).dtypes
+            self._dtypes = pandas.DataFrame.from_records(self._connection.fetchmany(1)).dtypes
             
-        return base.Schema(
+        return Schema(
             datashape='datashape',
             dtype=self._dtypes,
             shape=(None, len(self._dtypes)),
-            npartitions=2,
+            npartitions=1,
             extra_metadata={}
         )
 
     def _get_partition(self, _):
-        return pandas.DataFrame.from_records(self._adapter.fetchall(), columns=self._projection)
+        self._get_schema()
+        return pandas.DataFrame.from_records(self._connection.fetchall(), columns=self._projection)
+
+    def read(self):
+        self._dataframe = self._get_partition(1)
+        return self._dataframe
 
     def _close(self):
         # close any files, sockets, etc
-        if self._adapter is not None:
-            self._adapter.close()
-            self._adapter = None
+        if self._connection is not None:
+            self._connection.close()
+            self._connection = None
+        self._dataframe = None
