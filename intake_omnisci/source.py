@@ -1,9 +1,5 @@
 """ Implements intake-omnisci Plugin.
 """
-# Author: Pearu Peterson
-# Created: Apr 2018
-
-__version__ = '0.1'
 
 import pandas
 from intake.source import base
