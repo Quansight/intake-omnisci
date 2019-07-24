@@ -1,4 +1,4 @@
-""" Implements intake-mapd Plugin.
+""" Implements intake-omnisci Plugin.
 """
 # Author: Pearu Peterson
 # Created: Apr 2018
@@ -12,7 +12,7 @@ import pymapd
 class Plugin(base.Plugin):
 
     def __init__(self):
-        super(Plugin, self).__init__(name='mapd',
+        super(Plugin, self).__init__(name='omnisci',
                                      version=__version__,
                                      container='dataframe',
                                      partition_access=False,
@@ -25,10 +25,10 @@ class Plugin(base.Plugin):
         Parameters:
             uri : str
                 Full MapD URI for the database connection.
-            collection : a mapd valid query
-                mapd query to be executed.
-            projection : a mapd valid projection
-                mapd projection
+            collection : a omnisci valid query
+                omnisci query to be executed.
+            projection : a omnisci valid projection
+                omnisci projection
             kwargs (dict):
                 Additional parameters to pass as keyword arguments to
                 ``??` constructor.
@@ -40,16 +40,17 @@ class Plugin(base.Plugin):
                             metadata=base_kwargs['metadata'])
 
 
-class MapDDBSource(base.DataSource):
+class OmniSciSource(base.DataSource):
     
     def __init__(self, uri, collection, projection, metadata=None):
-        """Load data from MapD
+        """Load data from OmniSci
 
         Parameters:
             uri: str
-                a valid mongodb uri in the form '[mapd:]//host:port/database'.
+                a valid OmniSci uri in the form 'protocol://host:port/database'.
             collection: str
-                The collection in the database that will act as source;
+                The collection in the database that will act as a source.
+                Can either be a table name or a SQL query.
             projection: tuple/list
                 The fields to query.
             metadate: dict
