@@ -80,7 +80,11 @@ class OmniSciSource(DataSource):
                 protocol=self._protocol,
                 dbname=self._dbname,
             )
-        return self._connection.execute(self._sql_expr)
+        if self._sql_expr in self._connection.get_tables():
+            expr = f"SELECT * FROM {self._sql_expr}"
+        else:
+            expr = self._sql_expr
+        return self._connection.execute(expr)
 
     def _get_schema(self):
         if self._dtypes is None:
