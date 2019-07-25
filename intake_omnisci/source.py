@@ -116,6 +116,22 @@ class OmniSciSource(DataSource):
         self._dataframe = self._get_partition(0)
         return self._dataframe
 
+    def to_ibis(self):
+        import ibis.mapd
+        self._ibis_con = ibis.mapd.connect(
+            uri=self._uri,
+            user=self._user,
+            password=self._password,
+            host=self._host,
+            port=self._port,
+            protocol=self._protocol,
+            database=self._dbname,
+        )
+        if self._sql_expr in self._ibis_con.list_tables():
+            return self._ibis_con.table(self._sql_expr)
+        else:
+            return self._ibis_con.sql(self._sql_expr)
+
     def _close(self):
         # close any files, sockets, etc
         if self._connection:
