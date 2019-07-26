@@ -1,3 +1,4 @@
+ibis[mapd]
 intake
 pandas
 pymapd
