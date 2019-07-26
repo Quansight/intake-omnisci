@@ -89,11 +89,10 @@ class OmniSciSource(DataSource):
     def _get_schema(self):
         if self._dtypes is None:
             cursor = self._make_cursor()
-
-            # TODO: pymapd provides some data for querying column types.
-            # Can we use that here? This requires an extra fetch, but
-            # should work for more complex queries.
-            self._dtypes = pandas.DataFrame.from_records(cursor.fetchmany(1)).dtypes
+            records = cursor.fetchall()
+            columns = [d.name for d in cursor.description]
+            self._dataframe = pandas.DataFrame.from_records(records, columns=columns)
+            self._dtypes = self._dataframe.dtypes
             cursor.close()
 
         return Schema(
@@ -106,15 +105,10 @@ class OmniSciSource(DataSource):
 
     def _get_partition(self, _):
         self._get_schema()
-        cursor = self._make_cursor()
-        columns = [d.name for d in cursor.description]
-        records = cursor.fetchall()
-        cursor.close()
-        return pandas.DataFrame.from_records(records, columns=columns)
+        return self._dataframe
 
     def read(self):
-        self._dataframe = self._get_partition(0)
-        return self._dataframe
+        return self._get_partition(0)
 
     def to_ibis(self):
         import ibis.mapd
