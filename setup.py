@@ -23,6 +23,12 @@ setup(
     packages=find_packages(),
     package_data={"": ["*.csv", "*.yml", "*.html"]},
     include_package_data=True,
+    entry_points={
+        "intake.drivers": [
+            "omnisci = intake_omnisci:OmniSciSource",
+            "omnisci_cat = intake_omnisci:OmniSciCatalog",
+        ]
+    },
     install_requires=requires,
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
