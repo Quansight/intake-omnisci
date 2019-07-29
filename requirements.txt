@@ -1,4 +1,4 @@
-ibis[mapd]
+ibis-framework[mapd]
 intake
 pandas
 pymapd
