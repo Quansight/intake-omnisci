@@ -52,13 +52,14 @@ class OmniSciCatalog(Catalog):
         self._init_args = {
             "uri": uri,
             "user": user,
+            "host": host,
             "password": password,
             "dbname": dbname,
             "protocol": protocol,
         }
         # Only include these if they differ from the default values.
         if protocol != "binary":
-            self._init_args["protocol"] = protocl
+            self._init_args["protocol"] = protocol
         if port != 6274:
             self._init_args["port"] = port
 
