@@ -1,0 +1,97 @@
+# The databases backing OmniSci's interactive data visualization demos.
+metadata:
+  name: Interactive Data Visualization Demos
+  version: 1
+sources:
+  tweets:
+    driver: omnisci_cat
+    args:
+      user: mapd
+      password: HyperInteractive
+      dbname: mapd
+      host: scl2-04-gpu03.mapd.com
+      protocol: https
+      port: 443
+      sql_expr: tweets_new
+  ships:
+    driver: omnisci
+    args:
+      user: demouser
+      password: HyperInteractive
+      dbname: mapd
+      host: ships-demo-local.mapd.com
+      protocol: https
+      port: 443
+      sql_expr: ships_ais
+  taxis:
+    driver: omnisci_cat
+    args:
+      user: demouser
+      password: HyperInteractive
+      dbname: mapd
+      host: colossus.mapd.com
+      protocol: https
+      port: 443
+  opioid:
+    driver: omnisci_cat
+    args:
+      user: demouser
+      password: OmniSci123!
+      dbname: mapd
+      host: demo-opioid.omnisci.com
+      protocol: https
+      port: 443
+  flights:
+    driver: omnisci_cat
+    args:
+      user: demouser
+      password: HyperInteractive
+      dbname: newflights
+      host: demo-flights.omnisci.com
+      protocol: https
+      port: 443
+  census:
+    driver: omnisci_cat
+    args:
+      user: demouser
+      password: HyperInteractive
+      dbname: mapd
+      host: demo-census.omnisci.com
+      protocol: https
+      port: 443
+  political:
+    driver: omnisci_cat
+    args:
+      user: demouser
+      password: HyperInteractive
+      dbname: mapd
+      host: demo-political.omnisci.com
+      protocol: https
+      port: 443
+  tutela:
+    driver: omnisci_cat
+    args:
+      user: demouser
+      password: HyperInteractive
+      dbname: mapd
+      host: demo-tutela.omnisci.com
+      protocol: https
+      port: 443
+  metis:
+    driver: omnisci_cat
+    args:
+      user: mapd
+      password: HyperInteractive
+      dbname: mapd
+      host: metis.mapd.com
+      protocol: https
+      port: 443
+  vega:
+    driver: omnisci_cat
+    args:
+      user: mapd
+      password: HyperInteractive
+      dbname: mapd
+      host: vega-demo.mapd.com
+      protocol: https
+      port: 9092
