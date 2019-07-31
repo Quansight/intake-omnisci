@@ -4,14 +4,14 @@ metadata:
   version: 1
 sources:
   tweets:
-    driver: omnisci_cat
+    driver: omnisci
     args:
       user: mapd
       password: HyperInteractive
       dbname: mapd
       host: scl2-04-gpu03.mapd.com
-      protocol: https
-      port: 443
+      protocol: http
+      port: 80
       sql_expr: tweets_new
   ships:
     driver: omnisci
@@ -39,35 +39,38 @@ sources:
       password: OmniSci123!
       dbname: mapd
       host: demo-opioid.omnisci.com
-      protocol: https
-      port: 443
+      protocol: http
+      port: 80
   flights:
-    driver: omnisci_cat
+    driver: omnisci
     args:
       user: demouser
       password: HyperInteractive
       dbname: newflights
       host: demo-flights.omnisci.com
-      protocol: https
-      port: 443
+      protocol: http
+      port: 80
+      sql_expr: flights
   census:
-    driver: omnisci_cat
+    driver: omnisci
     args:
       user: demouser
       password: HyperInteractive
       dbname: mapd
       host: demo-census.omnisci.com
-      protocol: https
-      port: 443
+      protocol: http
+      port: 80
+      sql_expr: ipums_2000_2015
   political:
-    driver: omnisci_cat
+    driver: omnisci
     args:
       user: demouser
       password: HyperInteractive
       dbname: mapd
       host: demo-political.omnisci.com
-      protocol: https
-      port: 443
+      protocol: http
+      port: 80
+      sql_expr: fec_contributions_oct
   tutela:
     driver: omnisci_cat
     args:
@@ -93,5 +96,5 @@ sources:
       password: HyperInteractive
       dbname: mapd
       host: vega-demo.mapd.com
-      protocol: https
+      protocol: http
       port: 9092
