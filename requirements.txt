@@ -1,4 +1,3 @@
-ibis-framework[mapd]
 intake==0.5.1
 pandas
 pymapd
