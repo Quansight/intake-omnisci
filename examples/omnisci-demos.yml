@@ -3,16 +3,6 @@ metadata:
   name: Interactive Data Visualization Demos
   version: 1
 sources:
-  tweets:
-    driver: omnisci
-    args:
-      user: mapd
-      password: HyperInteractive
-      dbname: mapd
-      host: scl2-04-gpu03.mapd.com
-      protocol: http
-      port: 80
-      sql_expr: tweets_new
   ships:
     driver: omnisci
     args:
