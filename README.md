@@ -1,5 +1,19 @@
-# intake-mapd
-Intake-MapD: MapD Plugin for Intake
+# intake-omnisci
+An [OmniSci](https://www.omnisci.com) driver for
+[intake](https://intake.readthedocs.io/en/latest).
+
+## Installation
+You can install this driver by running
+```
+pip install intake-omnisci
+```
+Intake should automatically be able to pick it up and use it when encountering
+an OmniSci data source in a catalog.
+
+## Usage
+
+See an example of how to use the driver in
+[this](./examples/example.ipynb) notebook.
 
 Development Environment
 -----------------------

@@ -112,6 +112,7 @@ class OmniSciSource(DataSource):
 
     def to_ibis(self):
         import ibis.mapd
+
         self._ibis_con = ibis.mapd.connect(
             uri=self._uri,
             user=self._user,
