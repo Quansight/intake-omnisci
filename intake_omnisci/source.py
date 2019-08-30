@@ -20,6 +20,7 @@ class OmniSciSource(DataSource):
     def __init__(
         self,
         sql_expr,
+        ibis_con=None,
         uri=None,
         user=None,
         password=None,
@@ -38,6 +39,9 @@ class OmniSciSource(DataSource):
             sql_expr: str
                 The data to query from the database. Can either be a table name
                 or a SQL query.
+            ibis_con: ibis.omniscidb.OmniSciDBClient
+                An optional ibis omniscidb client. The source can create its own,
+                but then joins across clients will fail.
             uri: str
                 a valid OmniSci uri in the form 'mapd://user:password@host:port/database'.
             user: str
@@ -57,6 +61,7 @@ class OmniSciSource(DataSource):
         """
 
         self._uri = uri
+        self._ibis_con = ibis_con
         self._user = user
         self._password = password
         self._host = host
@@ -111,16 +116,17 @@ class OmniSciSource(DataSource):
         return self._get_partition(0)
 
     def to_ibis(self):
-        import ibis.omniscidb
-        self._ibis_con = ibis.omniscidb.connect(
-            uri=self._uri,
-            user=self._user,
-            password=self._password,
-            host=self._host,
-            port=self._port,
-            protocol=self._protocol,
-            database=self._dbname,
-        )
+        if self._ibis_con is None:
+            import ibis.omniscidb
+            self._ibis_con = ibis.omniscidb.connect(
+                uri=self._uri,
+                user=self._user,
+                password=self._password,
+                host=self._host,
+                port=self._port,
+                protocol=self._protocol,
+                database=self._dbname,
+            )
         if self._sql_expr in self._ibis_con.list_tables():
             return self._ibis_con.table(self._sql_expr)
         else:
