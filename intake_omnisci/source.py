@@ -111,9 +111,8 @@ class OmniSciSource(DataSource):
         return self._get_partition(0)
 
     def to_ibis(self):
-        import ibis.mapd
-
-        self._ibis_con = ibis.mapd.connect(
+        import ibis.omniscidb
+        self._ibis_con = ibis.omniscidb.connect(
             uri=self._uri,
             user=self._user,
             password=self._password,
