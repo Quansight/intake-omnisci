@@ -57,6 +57,7 @@ class OmniSciCatalog(Catalog):
             "dbname": dbname,
             "protocol": protocol,
         }
+        self._ibis_con = None
         # Only include these if they differ from the default values.
         if protocol != "binary":
             self._init_args["protocol"] = protocol
@@ -72,24 +73,24 @@ class OmniSciCatalog(Catalog):
         """
         connection = pymapd.connect(**self._init_args)
         self._entries = {}
-        ibis_con = None
-        try:
-            import ibis.omniscidb
-            ibis_con = ibis.omniscidb.connect(
-                uri=self._init_args['uri'],
-                user=self._init_args['user'],
-                password=self._init_args['password'],
-                host=self._init_args['host'],
-                port=self._init_args['port'],
-                protocol=self._init_args['protocol'],
-                database=self._init_args['dbname'],
-            )
-        except ImportError:
-            pass
+        if self._ibis_con is None:
+            try:
+                import ibis.omniscidb
+                self._ibis_con = ibis.omniscidb.connect(
+                    uri=self._init_args['uri'],
+                    user=self._init_args['user'],
+                    password=self._init_args['password'],
+                    host=self._init_args['host'],
+                    port=self._init_args['port'],
+                    protocol=self._init_args['protocol'],
+                    database=self._init_args['dbname'],
+                )
+            except ImportError:
+                pass
         for table in connection.get_tables():
             description = "SQL table %s from %s" % (table, str(self))
             args = {key: value for key, value in self._init_args.items() if value}
-            args['ibis_con'] = ibis_con
+            args['ibis_con'] = self._ibis_con
             args["sql_expr"] = table
             e = LocalCatalogEntry(table, description, "omnisci", True, args)
             self._entries[table] = e
