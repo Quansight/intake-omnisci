@@ -25,8 +25,8 @@ setup(
     include_package_data=True,
     entry_points={
         "intake.drivers": [
-            "omnisci = intake_omnisci:OmniSciSource",
-            "omnisci_cat = intake_omnisci:OmniSciCatalog",
+            "omnisci = intake_omnisci.source:OmniSciSource",
+            "omnisci_cat = intake_omnisci.catalog:OmniSciCatalog",
         ]
     },
     install_requires=requires,
