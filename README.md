@@ -12,17 +12,17 @@ an OmniSci data source in a catalog.
 
 ## Usage
 
-See an example of how to use the driver in
-[this](./examples/example.ipynb) notebook.
+See examples of how to use the driver in these notebooks:  
+[01_Intake_OmniSci_example](./examples/01_Intake_OmniSci_example.ipynb)  
+[02_Catalog_of_OmniSci_Demos](./examples/02_Catalog_of_OmniSci_Demos.ipynb)  
 
 Development Environment
 -----------------------
 
- * Create development Python environment.
- * Install conda: `conda install conda=4.5`
- * Install jupyter: `conda install jupyter`
- * Install [intake](https://github.com/ContinuumIO/intake): `conda install -c intake intake`
- * `pip install -r requirements.txt`
- * `python setup.py develop`
- * Verify development environment by running the unit tests with `py.test`.
+Create development Python environment:  
+ `conda env create -f environment.yml`  
+ 
+  > Note: For a faster solve, you can install mamba and use `mamba env create -f environment.yml`
+ 
+Verify development environment by running the tests with `pytest`
  

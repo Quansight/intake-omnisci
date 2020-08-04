@@ -55,6 +55,7 @@ class OmniSciCatalog(Catalog):
             "host": host,
             "password": password,
             "dbname": dbname,
+            "port": port,
             "protocol": protocol,
         }
         self._ibis_con = None

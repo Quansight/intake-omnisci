@@ -1,0 +1,37 @@
+name: pytest
+on:
+  pull_request:
+    branches:
+    - '*'
+jobs:
+  test_suite:
+    name: Pytest on ${{ matrix.python-version }}, ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+        python-version: [3.7, 3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: goanpeca/setup-miniconda@v1
+        with:
+           activate-environment: intake_omnisci
+           environment-file: environment.yml
+           python-version: ${{ matrix.python-version }}
+           auto-activate-base: false
+           auto-update-conda: false
+           channels: conda-forge # This should match what is specified in the environment.yml channels
+      - name: conda config
+        shell: bash -l {0}
+        run: conda config --show
+      - name: conda list
+        shell: bash -l {0}
+        run: conda list
+      - name: pip install
+        shell: bash -l {0}
+        run: python -m pip install --editable .
+      - name: pytest
+        shell: bash -l {0}
+        run: pytest -vvv

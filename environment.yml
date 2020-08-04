@@ -1,0 +1,16 @@
+name: intake_omnisci
+
+channels:
+  - conda-forge
+
+dependencies:
+  - intake>=0.5.3
+  - pandas<0.26
+  - pip
+  - pymapd=0.24
+  - pytest
+  - python>=3.7
+
+  - pip:
+    - ibis-framework[omniscidb]
+    - "-e ."
