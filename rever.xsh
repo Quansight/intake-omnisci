@@ -4,8 +4,8 @@ $ACTIVITIES = [
               'changelog',  # Uses files in the news folder to create a changelog for release
               'tag',  # Creates a tag for the new version number
               'push_tag',  # Pushes the tag up to the $TAG_REMOTE
-              'pypi',  # Sends the package to pypi
-              'conda_forge',  # Creates a PR into your package's feedstock
+              # 'pypi',  # Sends the package to pypi
+              # 'conda_forge',  # Creates a PR into your package's feedstock
               'ghrelease'  # Creates a Github release entry for the new tag
                ]
 $VERSION_BUMP_PATTERNS = [  # These note where/how to find the version numbers

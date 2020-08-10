@@ -4,14 +4,14 @@ from setuptools import setup, find_packages
 
 for line in open("intake_omnisci/__init__.py").readlines():
     if line.startswith("__version__") and "=" in line:
-        version = line.split("=", 1)[1].split()[0].strip("'\"\t\n ")
+        version = '0.0.1'
         break
 else:
     version = "0.0.1"
 
 setup(
     name="intake-omnisci",
-    version=version,
+    version = '0.0.1'
     description="OmniSci plugin for Intake",
     url="https://github.com/Quansight/intake-omnisci",
     maintainer="Pearu Peterson and Ian Rose",
