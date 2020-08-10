@@ -10,6 +10,7 @@ dependencies:
   - pymapd=0.24
   - pytest
   - python>=3.7
+  - rever
 
   - pip:
     - ibis-framework[omniscidb]

@@ -7,7 +7,7 @@ for line in open("intake_omnisci/__init__.py").readlines():
         version = line.split("=", 1)[1].split()[0].strip("'\"\t\n ")
         break
 else:
-    version = "0.1.0"
+    version = "0.0.1"
 
 setup(
     name="intake-omnisci",
