@@ -10,7 +10,7 @@ $ACTIVITIES = [
                ]
 $VERSION_BUMP_PATTERNS = [  # These note where/how to find the version numbers
                          ('intake_omnisci/__init__.py', r"__version__\s*=.*", "__version__ = '$VERSION'"),
-                         ('setup.py', r"version\s*=.*,", "version = '$VERSION'")
+                         ('setup.py', r"version\s*=.*,", "version='$VERSION',")
                          ]
 $CHANGELOG_FILENAME = 'CHANGELOG.rst'  # Filename for the changelog
 $CHANGELOG_TEMPLATE = 'TEMPLATE.rst'  # Filename for the news template
