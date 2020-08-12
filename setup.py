@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="intake-omnisci",
-    version='0.0.1',
+    version='0.0.2',
     description="OmniSci plugin for Intake",
     url="https://github.com/Quansight/intake-omnisci",
     maintainer="Pearu Peterson and Ian Rose",
